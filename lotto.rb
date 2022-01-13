@@ -36,8 +36,8 @@ end
 
 def losuj
 
-    5.times { print "#{rand(49)} " }
-    puts rand(49)
+    5.times { print "#{rand(1..49)} " }
+    puts rand(1..49)
 
 end
 

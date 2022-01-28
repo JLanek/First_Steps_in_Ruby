@@ -1,68 +1,79 @@
-def powitanie
+class Lotto
+  attr_reader :losowanie
 
+  def initialize
+    @losowanie = (1..49).to_a.sample(6)
+  end
+
+  def powitanie
     puts "Cześć, dziś zagramy w gre o nazwie Lotto."
     czy_znasz_zasady
     gra
+  end
 
-end
-
-def czy_znasz_zasady
-
+  def czy_znasz_zasady
     puts "Znasz zasady takiej gry? (Tak/Nie)"
     @wiedza = gets.chomp.to_s.downcase
-    sleep(3)
+  end
 
-end
-
-def gra
-    
+  def gra
     system('clear')
     if @wiedza.to_s == "tak" || @wiedza_po == "tak" then
-        sleep(2)
-        puts "To wspaniale możemy zacząć grę."
-        sleep(2)
-        losuj
-        puts "Trafiłeś 6? ;)"
-        @wynik = gets.chomp.to_s.downcase
-        zakonczenie
+      puts "To wspaniale możemy zacząć grę."
+      wybierz_liczby
+      puts "Wybrałeś następujące liczby: #{@kupon.join(", ")}"
+      puts "Wylosowane liczby to: #{losowanie.join(", ")}"
+      sprawdz_wygrana
+      zakonczenie
     elsif @wiedza_po.to_s == "nie"
-        puts "Miło było cię poznać. :D"
+      puts "Miło było Cię poznać. :D"
     else
-        puts "Oj, to niedobrze, przedstawię ci założenia gry: "
-        zasady
+      puts "Oj, to niedobrze, przedstawię ci założenia gry: "
+      zasady
     end
+  end
 
-end
+  def wybierz_liczby
+    puts "Podaj swoje liczby z zakresu 1 do 49, oddzielone przecinkiem, np. 1, 2, 3, 4, 5, 6"
+    @kupon = gets.chomp.to_s
+    @kupon = @kupon.split(',').map(&:to_i)
+    validuj_kupon
+    system('clear')
+  end
 
-def losuj
+  def validuj_kupon
+    return if @kupon.uniq.size == 6 && @kupon.max <= 49 && @kupon.min >= 1
 
-    5.times { print "#{rand(1..49)} " }
-    puts rand(1..49)
+    puts "Podano niewłaściwe liczby, spróbuj jeszcze raz."
+    wybierz_liczby
+  end
 
-end
+  def sprawdz_wygrana
+    roznica = @kupon - losowanie
+    trafione = @kupon - roznica
+    wiadomosc = trafione.size.positive? ? "Trafiłeś #{trafione.size}: #{trafione.join(", ")}" : "Niestety, tym razem się nie udało."
+    puts wiadomosc
+  end
 
-def zasady
-
+  def zasady
     puts "- W losowaniu bierze udział 49 kul."
     puts "- W zakładach prostych typuje się 6 z 49 liczb."
     puts "- Wygrywasz za 3,4,5,6 trafień."
-    sleep (5)
     puts "Chcesz spróbować swoich sił w tej grze? (Tak/Nie)"
     @wiedza_po = gets.chomp.to_s.downcase
     system('clear')
     gra
+  end
 
-end
-
-def zakonczenie
-    system('clear')
+  def zakonczenie
     puts "Chcesz zagrać jeszcze raz?"
     @wynik = gets.chomp.to_s.downcase
     if @wynik == "tak" then
-        gra
+      gra
     else
-        puts "Miło było cię poznać."
+      puts "Miło było Cię poznać."
     end
+  end
 end
 
-powitanie
+Lotto.new.powitanie
